@@ -56,6 +56,9 @@ Object oSelectJugador is a cWebView
             Set psCaption to "jugador.Nombre"
             Set piWidth to 896
         End_Object 
+        
+        
+    
 
         Object ojugadorApellido is a cWebColumn
             Entry_Item jugador.Apellido
