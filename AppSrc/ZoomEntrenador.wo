@@ -12,6 +12,7 @@ Use cligaDataDictionary.dd
 Use cequipoDataDictionary.dd
 Use centrenadorDataDictionary.dd
 
+
 Object oZoomEntrenador is a cWebView
     Set piColumnCount to 12
     Set psCaption to "ZoomEntrenador"
@@ -20,27 +21,27 @@ Object oZoomEntrenador is a cWebView
     Set pbShowCaption to False
     Set Verify_Save_Msg to 0
     Set piMaxWidth to 1024
-
+    
     Object oliga_DD is a cligaDataDictionary
-    End_Object 
-
+    End_Object
+    
     Object oequipo_DD is a cequipoDataDictionary
-        Set DDO_Server To oliga_DD
-    End_Object 
-
+        Set DDO_Server to oliga_DD
+    End_Object
+    
     Object oentrenador_DD is a centrenadorDataDictionary
-        Set DDO_Server To oequipo_DD
-    End_Object 
-
-    Set Main_DD To oentrenador_DD
-    Set Server  To oentrenador_DD
-
-
+        Set DDO_Server to oequipo_DD
+    End_Object
+    
+    Set Main_DD to oentrenador_DD
+    Set Server to oentrenador_DD
+    
+ 
     Object oWebMainPanel is a cWebPanel
         Set piColumnCount to 12
         WebSetResponsive piColumnCount rmMobile to 4
-
-        Object oentrenadorID is a cWebForm
+   
+        Object oentrenador.ID is a cWebForm
             Entry_Item entrenador.ID
             Set piColumnSpan to 3
             Set piColumnIndex to 0
@@ -79,15 +80,40 @@ Object oZoomEntrenador is a cWebView
             Set peLabelPosition to lpTop
             Set psLabel to "EquipoID"
             Set pbPromptButton to True
-
-// ToDo: Fill in the from-child parent Select view object name for navigate forward
-//            WebRegisterPath ntNavigateForward oSelectView
+           
+           WebRegisterPath ntNavigateForward oSelectEquipo
 
             Procedure OnPrompt
                 Send NavigatePath
             End_Procedure
-        End_Object 
-    End_Object 
+            
+            Procedure OnNavigateBack Handle hoCallback tWebNavigateData NavigateData
+                Forward Send OnNavigateBack hoCallback NavigateData
+                Send ShowInfoBox "Bienvenido de vuelta"
+            End_Procedure
+            
+            Procedure OngetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
+                Forward Send OnGetNavigateForwardData (&NavigateData) hoToView
+                Send ShowInfoBox "a punto de salir hacia equipos"
+            End_Procedure
+        End_Object
+        
+        Object oLigaNombre is a cWebForm
+            Entry_Item liga.Nombre
+            Set piColumnSpan to 6
+            Set piColumnIndex to 0
+            Set peLabelPosition to lpTop
+            Set psLabel to "Liga"
+            Set pbPromptButton to True
+            
+            WebRegisterPath ntNavigateForward oSelectLiga
+            
+            Procedure OnPrompt
+                Send NavigatePath
+            End_Procedure
+        End_Object
+    
+    End_Object
 
     Object oActionGroup is a cWebMenuGroup
 
@@ -172,8 +198,9 @@ Object oZoomEntrenador is a cWebView
         Case Begin
             Case (NavigateData.eNavigateType = nfFromMain)
                 // If from main, this is a propbably a main file Select to Zoom.
-                Case Break
-
+                Send ShowInfoBox "misma tabla"                 
+                Case Break        
+            
             Case (NavigateData.eNavigateType = nfFromParent)
                 // If from parent, this is a constrained drill down.
                 Case Break
@@ -184,10 +211,9 @@ Object oZoomEntrenador is a cWebView
 
             Case Else // must be nfUndefined
 
-        Case End
+         Case End
 
-        Send SetActionButtons
+         Send SetActionButtons
 
-    End_Procedure
-
+     End_Procedure
 End_Object 

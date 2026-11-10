@@ -94,7 +94,9 @@ Object oZoomEquipo is a cWebView
             Set psCSSClass to "WebDeleteMenuItem"
             Set psCaption to "Delete"
             Set peActionDisplay to adMenu
-
+         
+      
+            
             Procedure OnClick
                 Send Request_Delete
             End_Procedure

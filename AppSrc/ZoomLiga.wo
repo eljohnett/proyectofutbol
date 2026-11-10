@@ -9,6 +9,7 @@ Use cWebMenuItem.pkg
 Use cWebForm.pkg
 
 Use cligaDataDictionary.dd
+Use cequipoDataDictionary.dd
 
 Object oZoomLiga is a cWebView
     Set piColumnCount to 12
@@ -20,13 +21,17 @@ Object oZoomLiga is a cWebView
     Set piMaxWidth to 1024
 
     Object oliga_DD is a cligaDataDictionary
-    End_Object 
+    End_Object
+    Object oequipo_DD is a cequipoDataDictionary
+        Set DDO_Server to oliga_DD
+        Set Constrain_File to liga.File_Number
+    End_Object
 
     Set Main_DD To oliga_DD
     Set Server  To oliga_DD
 
 
-    Object oWebMainPanel is a cWebPanel
+ Object oWebMainPanel is a cWebPanel
         Set piColumnCount to 12
         WebSetResponsive piColumnCount rmMobile to 4
 
@@ -53,6 +58,11 @@ Object oZoomLiga is a cWebView
             Set peLabelPosition to lpTop
             Set psLabel to "Pais"
         End_Object 
+       
+  Object oentrenadorEquiposs is a cWebGroup
+        Set piColumnCount to 12
+         
+       
 
         Object oligaEquipos is a cWebForm
             Entry_Item liga.Equipos
@@ -69,7 +79,40 @@ Object oZoomLiga is a cWebView
             Set peLabelPosition to lpTop
             Set psLabel to "EquiposMax"
         End_Object 
-    End_Object 
+    
+      End_Object
+   
+  
+    Object oEquiposList is a cWebList
+        Set Server to oequipo_DD
+        Set piColumnSpan to 12 
+        
+        Object oEquipoNombreCol is a cWebColumn
+            Entry_Item equipo.Nombre
+            Set psCaption to "Equipo"
+        End_Object
+    End_Object
+    Object oVerEquiposBtn is a cWebButton
+        Set psCaption to "Ver equipos"
+        Set piColumnSpan to 6
+        Set piColumnIndex to 0 
+        
+        WebRegisterPath ntNavigateForward oSelectEquipo
+        
+        Procedure OnClick
+            Send NavigatePath
+        End_Procedure
+        
+        Procedure OnGetNavigateForwardData tWebNavigateData ByRef NavigateData Handle hoToView
+            Forward Send OnGetNavigateForwardData (&NavigateData) hoToView
+            Send ShowInfoBox "a punto de salir hacia equipos"
+        End_Procedure
+    End_Object
+ End_Object
+     
+    
+  
+
 
     Object oActionGroup is a cWebMenuGroup
 
@@ -97,6 +140,10 @@ Object oZoomLiga is a cWebView
             Set psCSSClass to "WebDeleteMenuItem"
             Set psCaption to "Delete"
             Set peActionDisplay to adMenu
+        
+            
+        
+       
 
             Procedure OnClick
                 Send Request_Delete
