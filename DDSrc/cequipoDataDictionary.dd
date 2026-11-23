@@ -15,12 +15,58 @@ Class cequipoDataDictionary is a DataDictionary
 
         Set Add_Client_File to entrenador.File_Number
         Set Add_Client_File to jugador.File_Number
+        
+        Set Protect_Key_State to True
+        Set Key_Field_State Field equipo.ID to True
+        //Set Field_Option Field equipo.Nombre DD_NOENTER to True
+        
+        Set Field_Option Field equipo.ID DD_REQUIRED to True
+        Set Field_Option Field equipo.Nombre DD_REQUIRED to True
+        Set Field_Option Field equipo.LigaID DD_REQUIRED to True 
 
         Set Foreign_Field_Option DD_KEYFIELD DD_NOPUT to True
         Set Foreign_Field_Option DD_KEYFIELD DD_FINDREQ to True
         Set Foreign_Field_Option DD_INDEXFIELD DD_NOPUT to True
         Set Foreign_Field_Option DD_DEFAULT DD_DISPLAYONLY to True
+        
+        Set Cascade_Delete_State to False
+        
+        Set Key_Field_State Field equipo.ID to True
+        Set Field_Option Field equipo.ID DD_REQUIRED to True
+        
+        Set Field_Option Field equipo.Nombre DD_NOPUT to True
+        Set Field_Option Field equipo.Nombre DD_REQUIRED to True
+        
+        Set Field_Option Field equipo.LigaID DD_REQUIRED to True
+        
+        Set ParentNullAllowed liga.File_Number to True
 
     End_Procedure
+    
+    Procedure Update 
+        Forward Send Update
+        //1
+        Move (liga.Equipos + 1) to liga.Equipos
+    End_Procedure
+    
+    Procedure Backout
+        Forward Send Backout
+        //-1
+        Move (liga.Equipos -1) to liga.Equipos
+    End_Procedure
+    
+    Function Validate_Save Returns Integer
+        Integer iRetVal
+        Forward Get Validate_Save to iRetVal
+        If (iRetVal <> 0) Begin
+        
+        End
+        
+        If (liga.Equipos > liga.EquiposMax) Begin
+            Error DFERR_OPERATOR "no se puede crear el equipo: se ha alcanzado el máximo permitido"
+        End
+        
+        Function_Return 0
+    End_Function
 
 End_Class

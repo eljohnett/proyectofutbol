@@ -51,14 +51,18 @@ Object oZoomJugador is a cWebView
 
         Object ojugadorNombre is a cWebForm
             Entry_Item jugador.Nombre
+           
             Set piColumnSpan to 12
             Set piColumnIndex to 0
             Set peLabelPosition to lpTop
             Set psLabel to "Nombre"
         End_Object 
+        
+       
 
         Object ojugadorApellido is a cWebForm
             Entry_Item jugador.Apellido
+            
             Set piColumnSpan to 12
             Set piColumnIndex to 0
             Set peLabelPosition to lpTop
